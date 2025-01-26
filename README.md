@@ -1,4 +1,4 @@
-# Multiscale Temporal Dynamic Learning for Time Series Classification (MsDL)
+# Multiscale Temporal Dynamic Learning for Time Series Classification
 
 
 ## Installation
