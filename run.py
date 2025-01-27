@@ -6,8 +6,6 @@ from utils.MsDL import *
 from utils.Loss import Separation_Loss, Fitting_Loss
 import torch.utils.data as Data
 from sklearn.ensemble import RandomForestClassifier
-
-
 device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
 
@@ -24,10 +22,6 @@ def get_data(path):
     train_y = torch.from_numpy(data_dict['train_y'].astype(np.float32))
     test_x = torch.from_numpy(data_dict['test_x'].astype(np.float32))
     test_y = torch.from_numpy(data_dict['test_y'].astype(np.float32))
-
-    train_x = normalize(train_x)
-    test_x = normalize(test_x)
-
     num = train_x.shape[0]
     random_index = list(range(num))
     random.shuffle(random_index)
@@ -35,14 +29,6 @@ def get_data(path):
     train_y = train_y[random_index]
     return train_x, train_y, test_x, test_y
 
-
-def normalize(data):
-    mean = torch.mean(data, dim=1)
-    max_val = torch.max(torch.abs(data), dim=1)[0]
-    normalized = torch.zeros(data.shape)
-    for i in range(data.size(0)):
-        normalized[i, :, :] = (data[i, :, :] - mean[i, :])/max_val[i, :]
-    return normalized
 
 
 def transform(model, loader, radii, is_eval=False):
@@ -108,8 +94,8 @@ def train(model, x, y, batch_size, epsilon=0.01, p=4):
 
 
 def run(units=20, regular=1., leaky=0., K=40):
-    set_seed(0)
-    x_train, y_train, x_test, y_test = get_data("data/ECGFiveDays.npz")
+    set_seed(42)
+    x_train, y_train, x_test, y_test = get_data("./data/ECGFiveDays.npz")
     train_batch = x_train.shape[0]
     test_batch = x_test.shape[0]
     input_dim = x_train.shape[2]
@@ -146,7 +132,6 @@ def run(units=20, regular=1., leaky=0., K=40):
 
 if __name__ == "__main__":
     run()
-
 
 
 
